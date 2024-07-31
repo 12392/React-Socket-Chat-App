@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const { chats } = require("./data");
 const connectDB = require("./config/db");
 const colors = require("colors");
+const cors = require("cors");
 
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
@@ -13,6 +14,7 @@ connectDB();
 
 const app = express();
 
+app.use(cors());
 app.use(express.json()); // to accept json data
 
 app.get("/", (req, res) => {
