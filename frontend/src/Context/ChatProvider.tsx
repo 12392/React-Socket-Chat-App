@@ -12,9 +12,9 @@ import { Chat } from "../model/chats";
 interface ChatContextType {
   user: User | null;
   chats: Chat[] | null;
-  selectedChat: Chat | null;
+  selectedChat: Chat | null | string;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
-  setSelectedChat: React.Dispatch<React.SetStateAction<Chat | null>>;
+  setSelectedChat: React.Dispatch<React.SetStateAction<Chat | null | string>>;
   setChats: React.Dispatch<React.SetStateAction<Chat[] | null>>;
 }
 
@@ -27,8 +27,8 @@ const ChatContext = createContext<ChatContextType | null>(null);
 
 const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [selectedChat, setSelectedChat] = useState<Chat | null >(null);
-  const [chats, setChats] = useState<Chat[] | null >([]);;
+  const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const [chats, setChats] = useState<Chat[] | null>([]);
   const history = useHistory();
 
   useEffect(() => {
@@ -42,7 +42,9 @@ const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
   }, [history]);
 
   return (
-    <ChatContext.Provider value={{ user, setUser, selectedChat, setSelectedChat, chats, setChats }}>
+    <ChatContext.Provider
+      value={{ user, setUser, selectedChat, setSelectedChat, chats, setChats }}
+    >
       {children}
     </ChatContext.Provider>
   );

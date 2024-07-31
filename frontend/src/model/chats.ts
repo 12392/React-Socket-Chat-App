@@ -9,7 +9,7 @@ export interface BaseChat {
 
 export interface GroupChat extends BaseChat {
   isGroupChat: true;
-  groupAdmin: string;
+  groupAdmin: User;
 }
 
 export interface PrivateChat extends BaseChat {
