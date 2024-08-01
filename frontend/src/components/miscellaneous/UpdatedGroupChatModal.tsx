@@ -25,11 +25,16 @@ import UserListItem from "../UserAvatar/UserListItem";
 import { User } from "../../model/user";
 
 interface UpdatedGroupChatProps {
+  fetchMessages: () => Promise<void>;
   fetchAgain: boolean;
   setFetchAgain: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const UpdatedGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
+const UpdatedGroupChatModal: React.FC<UpdatedGroupChatProps> = ({
+  fetchAgain,
+  setFetchAgain,
+  fetchMessages,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -197,7 +202,7 @@ const UpdatedGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
 
       user1._id === user._id ? setSelectedChat(null) : setSelectedChat(data);
       setFetchAgain(!fetchAgain);
-      //   fetchMessages();
+      fetchMessages();
       setLoading(false);
     } catch (error) {
       toast({
@@ -219,6 +224,7 @@ const UpdatedGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
         display={{ base: "flex" }}
         icon={<ViewIcon />}
         onClick={onOpen}
+        aria-label=""
       />
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
