@@ -27,13 +27,21 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import ChatLoading from "../ChatLoading";
 import UserListItem from "../UserAvatar/UserListItem";
+import { getSender } from "../../config/chatLogics";
 const SideDrawer: React.FC = () => {
   const [search, setSearch] = useState<string>("");
   const [searchResult, setSearchResult] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingChat, setLoadingChat] = useState<boolean>(false);
 
-  const { user, setSelectedChat, chats, setChats } = useChatState();
+  const {
+    user,
+    setSelectedChat,
+    chats,
+    setChats,
+    notification,
+    setNotification,
+  } = useChatState();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const history = useHistory();
@@ -43,7 +51,7 @@ const SideDrawer: React.FC = () => {
     history.push("/");
   };
 
-  const handleSearch = async() => {
+  const handleSearch = async () => {
     if (!search) {
       toast({
         title: "Please Enter something in search",
@@ -78,7 +86,7 @@ const SideDrawer: React.FC = () => {
         position: "bottom-left",
       });
     }
-  }
+  };
 
   const accessChat = async (userId: string) => {
     console.log(userId);
@@ -92,10 +100,15 @@ const SideDrawer: React.FC = () => {
         },
       };
       console.log(config);
-      const { data } = await axios.post(`http://localhost:5000/api/chat`, { userId }, config);
+      const { data } = await axios.post(
+        `http://localhost:5000/api/chat`,
+        { userId },
+        config
+      );
       console.log(data);
 
-      if (!chats?.find((c) => c._id === data._id)) setChats([data, ...(chats || [])]);
+      if (!chats?.find((c) => c._id === data._id))
+        setChats([data, ...(chats || [])]);
       setSelectedChat(data);
       setLoadingChat(false);
       onClose();
@@ -137,7 +150,25 @@ const SideDrawer: React.FC = () => {
           <MenuButton p={"1"}>
             <BellIcon fontSize={"2xl"} margin={"1"} />
           </MenuButton>
-          {/* <MenuList></MenuList> */}
+          <MenuList pl={2}>
+            {!notification.length && "No New Messages"}
+            {notification.map((notif) => (
+              <MenuItem
+                key={notif._id}
+                onClick={() => {
+                  setSelectedChat(notif.chat);
+                  setNotification(notification.filter((n) => n !== notif));
+                }}
+              >
+                {notif.chat.isGroupChat
+                  ? `New Message in ${notif.chat.chatName}`
+                  : `New Message from ${getSender(
+                      user as User,
+                      notif.chat.users
+                    )}`}
+              </MenuItem>
+            ))}
+          </MenuList>
         </Menu>
         <Menu>
           <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
@@ -161,26 +192,26 @@ const SideDrawer: React.FC = () => {
         </Menu>
       </Box>
 
-      <Drawer placement="left" onClose={onClose}  isOpen={isOpen}>
+      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader borderBottomWidth={"1px"}>Search User</DrawerHeader>
-        <DrawerBody>
-          <Box display={"flex"} pb={"2"}>
-          <Input
+          <DrawerBody>
+            <Box display={"flex"} pb={"2"}>
+              <Input
                 placeholder="Search by name or email"
                 mr={2}
                 value={search}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSearch(e.target.value)
+                }
               />
-              <Button
-               onClick={handleSearch}
-               >Go</Button>
-          </Box>
-          {loading ? (
+              <Button onClick={handleSearch}>Go</Button>
+            </Box>
+            {loading ? (
               <ChatLoading />
-              // <p>Loading...</p>
             ) : (
+              // <p>Loading...</p>
               searchResult?.map((user) => (
                 <UserListItem
                   key={user._id}
@@ -188,11 +219,10 @@ const SideDrawer: React.FC = () => {
                   handleFunction={() => accessChat(user._id)}
                 />
               ))
-            //  <p>{searchResult?.length} </p> 
+              //  <p>{searchResult?.length} </p>
             )}
-            {loadingChat && 
-            <Spinner ml="auto" display="flex" />}
-        </DrawerBody>
+            {loadingChat && <Spinner ml="auto" display="flex" />}
+          </DrawerBody>
         </DrawerContent>
       </Drawer>
     </>

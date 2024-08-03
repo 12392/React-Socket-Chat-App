@@ -165,7 +165,7 @@ const GroupChatModal: React.FC<GroupModalProps> = ({ children }) => {
                 }
               />
             </FormControl>
-            <Box w="100%" d="flex" flexWrap="wrap">
+            <Box w="100%" display="flex" flexWrap="wrap">
               {selectedUsers.map((u) => (
                 <UserBadgeItem
                   key={u._id}
