@@ -18,7 +18,7 @@ import { User } from "../../model/user";
 
 interface ProfileModalProps {
   user: User | null;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const ProfileModal: React.FC<ProfileModalProps> = ({ user, children }) => {

@@ -99,7 +99,7 @@ const UpdatedGroupChatModal: React.FC<UpdatedGroupChatProps> = ({
       setSelectedChat(data);
       setFetchAgain(!fetchAgain);
       setRenameLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error Occured!",
         description: error.response.data.message,
@@ -155,7 +155,7 @@ const UpdatedGroupChatModal: React.FC<UpdatedGroupChatProps> = ({
       setSelectedChat(data);
       setFetchAgain(!fetchAgain);
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error Occured!",
         description: error.response.data.message,
@@ -204,7 +204,7 @@ const UpdatedGroupChatModal: React.FC<UpdatedGroupChatProps> = ({
       setFetchAgain(!fetchAgain);
       fetchMessages();
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error Occured!",
         description: error.response.data.message,

@@ -118,7 +118,7 @@ const GroupChatModal: React.FC<GroupModalProps> = ({ children }) => {
         isClosable: true,
         position: "bottom",
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Failed to Create the Chat!",
         description: error.response.data,
